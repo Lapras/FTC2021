@@ -18,10 +18,13 @@ public class PathTest extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        Trajectory troj = drive.trajectoryBuilder(new Pose2d())
+        //TODO: maybe initialize all trajectories before watiForStart()? Until we start using variables in trajectories
+        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
                 .splineTo(new Vector2d(30, 30), 0)
                 .build();
 
-        drive.followTrajectory(troj);
+        drive.followTrajectory(traj);
     }
+    //this class is just a test, something that will simply initialize
+    //the roadrunner stuff and let it being tested with different trajectories
 }
