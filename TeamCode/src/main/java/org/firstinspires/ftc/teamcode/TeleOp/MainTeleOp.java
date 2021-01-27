@@ -10,6 +10,7 @@ public class MainTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Chassis Chassis = new Chassis(hardwareMap);
         double motorPowers[];
+        boolean fieldDrive = false;
         //initializing subsystems and any variables before start
 
         //TODO: waiting for start message
@@ -18,7 +19,15 @@ public class MainTeleOp extends LinearOpMode {
         if(isStopRequested()) return;
 
         while(opModeIsActive()) {
-            motorPowers = Chassis.mecanumPowers(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            if(gamepad1.a) {
+                fieldDrive = !fieldDrive;
+            }
+
+            if(fieldDrive) {
+                motorPowers = Chassis.mecanumPowersField(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            } else {
+                motorPowers = Chassis.mecanumPowers(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            }
             Chassis.assignWheelPower(motorPowers);
             //uses mecanumPowers from Chassis() and assignWheelPower, basic driving
 

@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Chassis {
     //class for Chassis/Drive in general including wheel motors
     //and imu
+    private double FIELD_OFFSET;
+
     private DcMotor frontLeft, frontRight, backLeft, backRight;
     private BNO055IMU imu;
 
@@ -18,7 +20,7 @@ public class Chassis {
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
         //constructor for Chassis Class
         //THIS CANNOT BE USED IN TANDEM WTIH SampleMecanumDrive();
         //as such this is for Tele-op ONLY! I still have to figure out
@@ -72,4 +74,32 @@ public class Chassis {
     }
     //mecanumPowers takes an x, y, and rotation input and translates this to motor powers for a mecanum drive
     //does not directly set motor powers so this can be used for telemetry as well
+    public double[] mecanumPowersField(double xInput, double yInput, double rotation) {
+        if(Math.abs(xInput) <= 0.05) xInput = 0;
+        if(Math.abs(yInput) <= 0.05) yInput = 0;
+        if(Math.abs(rotation) <= 0.05) rotation = 0;
+        //set deadzones
+        yInput = yInput*Math.cos(-Math.toRadians(getHeading() + FIELD_OFFSET)) + xInput*Math.sin(-Math.toRadians(getHeading() + FIELD_OFFSET));
+        xInput = -yInput*Math.sin(-Math.toRadians(getHeading()+ FIELD_OFFSET)) + xInput*Math.cos(-Math.toRadians(getHeading() + FIELD_OFFSET));
+
+        double frontLeftPower = rotation + yInput + xInput;
+        double frontRightPower = -rotation + yInput - xInput;
+        double backRightPower = -rotation + yInput + xInput;
+        double backLeftPower = rotation + yInput - xInput;
+        //each axis of motion corresponds to a forward
+        // or backwards drive of a specific motor.
+        // Add or subtract these values to combine all inputs
+
+        double max = Math.abs(Math.max(1, frontLeftPower));
+        max = Math.abs(Math.max(max, frontRightPower));
+        max = Math.abs(Math.max(max, backRightPower));
+        max = Math.abs(Math.max(max, backLeftPower));
+        frontLeftPower /= max;
+        frontRightPower /= max;
+        backRightPower /= max;
+        backLeftPower /= max;
+        //normalize all values
+        return new double[]{frontLeftPower, frontRightPower, backRightPower, backLeftPower};
+    }
+    //mecanumPowersField simply does what mecanumPowers, but changing the intitial input values to match a field localization, rather than the robot's
 }
