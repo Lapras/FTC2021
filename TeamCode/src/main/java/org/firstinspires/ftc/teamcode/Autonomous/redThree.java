@@ -15,33 +15,30 @@ public class redThree extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive.setPoseEstimate(new Pose2d(-60, -48, 0));
 
+        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(-60, -48, 0))
+                .splineTo(new Vector2d(12,-60), 0)
+                .build();
+
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end(), 90)
+                .splineToSplineHeading(new Pose2d(-12, -24, Math.toRadians(90)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-36, -24, Math.toRadians(180)), Math.toRadians(180))
+                .build();
+
+        Trajectory traj3 = drive.trajectoryBuilder(traj2.end(), 0)
+                .splineToSplineHeading(new Pose2d(12, -42, Math.toRadians(270)), 0)
+                .build();
         waitForStart();
 
         if (isStopRequested()) return;
 
-        //Trajectories should be initialized inside the run method so that they can be oontinued using the
-        //Drive.getPoseEstimate() to reduce error.
-       /* drive.setPoseEstimate(new Pose2d(-60, -48, 0));
-        Trajectory traj1 = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .splineTo(new Vector2d(12,-60), 0)
-                .build();
-
-        drive.followTrajectory(traj1);*/
+        drive.followTrajectory(traj1);
         //release wobble
-        drive.setPoseEstimate(new Pose2d(12, -60, 0));
-        drive.turn(Math.toRadians(90));
-        Trajectory traj2 = drive.trajectoryBuilder(drive.getPoseEstimate(), 90)
-                .splineTo(new Vector2d(-12, -24), 180)
-                //.splineTo(new Vector2d(-36, -24), 180)
-                .build();
 
         drive.followTrajectory(traj2);
         //grab second wobble
-      /*  Trajectory traj3 = drive.trajectoryBuilder(drive.getPoseEstimate(), 0)
-                .splineToSplineHeading(new Pose2d(12, -48, 270), 0)
-                .build();
 
-        drive.followTrajectory(traj3);*/
+        drive.followTrajectory(traj3);
     }
 }

@@ -17,25 +17,25 @@ public class redOne extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
+        drive.setPoseEstimate(new Pose2d(-60, -24, 0));
+        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(-60,-24, 0))
+                .splineToConstantHeading(new Vector2d(-24,-12), 0)
+                .splineToConstantHeading(new Vector2d(38, -38), 0)
+                .build();
+        //firstTrajectory from starting point, around disks,
+        //release wobble before second trajecto
+        //Trajectories should be initialized before calling code to reduce delay
+
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+                .lineTo(new Vector2d(12, -12))
+                .build();
+        //second trajectory to succesfully navigate
         waitForStart();
 
         if (isStopRequested()) return;
-        //Trajectories should be initialized inside the run method so that they can be oontinued using the
-        //Drive.getPoseEstimate() to reduce error.
-        drive.setPoseEstimate(new Pose2d(-60, -24, 0));
-        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(-60,-24, 0))
-                .splineTo(new Vector2d(-24,-12), 0)
-                .splineTo(new Vector2d(38, -38), 0)
-                .build();
 
         drive.followTrajectory(traj1);
-        //firstTrajectory from starting point, around disks,
-        //release wobble before second trajectory
-        Trajectory traj2 = drive.trajectoryBuilder(drive.getPoseEstimate(), 180)
-                .splineToConstantHeading(new Vector2d(12, -12), 90)
-                .build();
 
         drive.followTrajectory(traj2);
-        //second trajectory to succesfully navigate
     }
 }
