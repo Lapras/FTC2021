@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.subSystems.WobbleArm;
 
 import org.firstinspires.ftc.teamcode.quickStartDrive.SampleMecanumDrive;
 
@@ -15,8 +16,9 @@ public class redThree extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(new Pose2d(-60, -48, 0));
+        WobbleArm wobbleArm = new WobbleArm(hardwareMap);
 
+        drive.setPoseEstimate(new Pose2d(-60, -48, 0));
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(-60, -48, 0))
                 .splineTo(new Vector2d(12,-60), 0)
                 .build();

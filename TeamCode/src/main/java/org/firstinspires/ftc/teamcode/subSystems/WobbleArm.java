@@ -24,10 +24,21 @@ public class WobbleArm {
 
     public void armToggle() {
         if(extended) {
-            armServo.setPosition(0.78);
+            armServo.setPosition(.25);
         } else {
-            armServo.setPosition(.2);
+            armServo.setPosition(.8);
         }
+        extended = !extended;
+    }
+
+    public void armExtend() {
+        armServo.setPosition(.8);
+        extended = true;
+    }
+
+    public void armRetract() {
+        armServo.setPosition(.25);
+        extended = false;
     }
 
     public void grabToggle() {
@@ -38,5 +49,6 @@ public class WobbleArm {
             upperGrab.setPosition(1);
             lowerGrab.setPosition(1);
         }
+        grabbing = !grabbing;
     }
 }

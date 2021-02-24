@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subSystems.Chassis;
+import org.firstinspires.ftc.teamcode.subSystems.WobbleArm;
 
 @TeleOp(name = "teleOp", group = "LinearOpMode")
 public class MainTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Chassis Chassis = new Chassis(hardwareMap);
+        WobbleArm wobbleArm = new WobbleArm(hardwareMap);
         double motorPowers[];
         boolean fieldDrive = false;
         //initializing subsystems and any variables before start
@@ -21,6 +23,12 @@ public class MainTeleOp extends LinearOpMode {
         while(opModeIsActive()) {
             if(gamepad1.a) {
                 fieldDrive = !fieldDrive;
+            }
+            if (gamepad1.b) {
+                wobbleArm.armToggle();
+            }
+            if(gamepad1.x) {
+                wobbleArm.grabToggle();
             }
 
             if(fieldDrive) {
