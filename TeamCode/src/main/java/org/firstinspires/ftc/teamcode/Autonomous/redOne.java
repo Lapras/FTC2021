@@ -22,7 +22,7 @@ public class redOne extends LinearOpMode {
         drive.setPoseEstimate(new Pose2d(-60, -24, 0));
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(-60,-24, 0))
                 .splineToConstantHeading(new Vector2d(-24,-12), 0)
-                .splineToConstantHeading(new Vector2d(38, -38), 0)
+                .splineToConstantHeading(new Vector2d(26, -38), 0)
                 .build();
         //firstTrajectory from starting point, around disks,
         //release wobble before second trajecto
@@ -37,10 +37,14 @@ public class redOne extends LinearOpMode {
         if (isStopRequested()) return;
 
         wobbleArm.armExtend();
+        sleep(1000);
+        wobbleArm.grabGrab();
         sleep(2000);
 
         drive.followTrajectory(traj1);
 
+        wobbleArm.grabRelease();
+        sleep(1000);
         wobbleArm.armRetract();
         sleep(2000);
 

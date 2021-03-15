@@ -26,6 +26,8 @@ public class redTwo extends LinearOpMode {
         if (isStopRequested()) return;
 
         wobbleArm.armExtend();
+        sleep(1000);
+        wobbleArm.grabGrab();
         sleep(2000);
         //Trajectories should be initialized inside the run method so that they can be oontinued using the
         //Drive.getPoseEstimate() to reduce error.
@@ -33,6 +35,8 @@ public class redTwo extends LinearOpMode {
         drive.followTrajectory(traj1);
         //release wobble
 
+        wobbleArm.grabRelease();
+        sleep(1000);
         wobbleArm.armRetract();
         sleep(2000);
     }

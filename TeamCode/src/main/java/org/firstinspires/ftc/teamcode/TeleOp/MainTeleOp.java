@@ -16,6 +16,7 @@ public class MainTeleOp extends LinearOpMode {
         //initializing subsystems and any variables before start
 
         //TODO: waiting for start message
+
         waitForStart();
 
         if(isStopRequested()) return;

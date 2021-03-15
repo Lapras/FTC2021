@@ -14,6 +14,7 @@ public class WobbleArm {
         upperGrab = hardwareMap.get(Servo.class,("upperGrab"));
         lowerGrab = hardwareMap.get(Servo.class,("lowerGrab"));
         extended = false;
+        grabbing = false;
     }
     public WobbleArm(HardwareMap hardwareMap, boolean extended) {
         armServo = hardwareMap.get(Servo.class,("armServo"));
@@ -50,5 +51,17 @@ public class WobbleArm {
             lowerGrab.setPosition(1);
         }
         grabbing = !grabbing;
+    }
+
+    public void grabRelease() {
+        upperGrab.setPosition(0);
+        lowerGrab.setPosition(0);
+        grabbing = false;
+    }
+
+    public void grabGrab() {
+        upperGrab.setPosition(1);
+        lowerGrab.setPosition(1);
+        grabbing = true;
     }
 }
