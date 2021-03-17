@@ -29,13 +29,26 @@ public class VisionSensor {
 
     private List<Recognition> recognitionList;
 
-    public VisionSensor() {
+    public VisionSensor(HardwareMap hardwareMap) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+
+        recognitionList = tfod.getRecognitions();
     }
 
     public void activateTfod() {
@@ -57,8 +70,12 @@ public class VisionSensor {
         }
     }
 
+    public List<Recognition> getRecognitions() {
+        return recognitionList;
+    }
+
     public void updateRecognitions() {
-        recognitionList = tfod.getUpdatedRecognitions();
+        recognitionList = tfod.getRecognitions();
     }
 
     public int getRecognitionSize() {
@@ -74,22 +91,9 @@ public class VisionSensor {
     }
 
     public void initVuforia(HardwareMap hardwareMap) {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
     }
     public void initTfod(HardwareMap hardwareMap) {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 
-        recognitionList = tfod.getRecognitions();
     }
 }
