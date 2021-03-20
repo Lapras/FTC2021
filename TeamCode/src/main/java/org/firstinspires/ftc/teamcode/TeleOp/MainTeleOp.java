@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subSystems.Chassis;
 import org.firstinspires.ftc.teamcode.subSystems.WobbleArm;
 
+
+//Main Teleop for competition. Drivetrain, global drive functionality
 @TeleOp(name = "teleOp", group = "LinearOpMode")
 public class MainTeleOp extends LinearOpMode {
     @Override
@@ -31,6 +33,8 @@ public class MainTeleOp extends LinearOpMode {
             if(gamepad1.x) {
                 wobbleArm.grabToggle();
             }
+            //Need better way to actuate gamepads.
+            //A controls field/Global, B controls arm, X controls Grab
 
             if(fieldDrive) {
                 motorPowers = Chassis.mecanumPowersField(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);

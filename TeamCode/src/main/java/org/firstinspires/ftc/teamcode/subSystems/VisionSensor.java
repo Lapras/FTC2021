@@ -28,6 +28,7 @@ public class VisionSensor {
     private TFObjectDetector tfod;
 
     private List<Recognition> recognitionList;
+    //Initializing Variables & the Vuforia Key
 
     public VisionSensor(HardwareMap hardwareMap) {
         /*
@@ -56,6 +57,8 @@ public class VisionSensor {
             tfod.activate();
             tfod.setZoom(2.5, 16.0/9.0);
         }
+        //Activates tensorflow and adjusts the Camera magnification to
+        //reccomended value
     }
     public boolean isNull() {
         if(tfod != null) {
@@ -63,20 +66,25 @@ public class VisionSensor {
         } else {
             return false;
         }
+        //Returns true if Tfod is not Null, returns false if Tfod is null
     }
     public void shutDownTfod() {
         if(tfod != null) {
             tfod.shutdown();
         }
+        //Shuts down Tensorflow
     }
 
     public List<Recognition> getRecognitions() {
         return recognitionList;
     }
+    //Returns an ArrayList of Recognitions equal to the recognitionList
 
     public void updateRecognitions() {
         recognitionList = tfod.getRecognitions();
     }
+    //Updates Recognitions from Tensorflow. You are usually supposed to use
+    //tfod.getUpdatedRecognitions, but for some rreason that does not work.
 
     public int getRecognitionSize() {
         if (recognitionList != null) {
@@ -85,15 +93,11 @@ public class VisionSensor {
             return 0;
         }
     }
+    //returns the size of recognitionList, returns 0 if null
 
     public String getLabel(int index) {
         return recognitionList.get(index).getLabel();
     }
+    //Returns the label of the recognition from a given index
 
-    public void initVuforia(HardwareMap hardwareMap) {
-
-    }
-    public void initTfod(HardwareMap hardwareMap) {
-
-    }
 }

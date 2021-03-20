@@ -25,6 +25,8 @@ public class Chassis {
         //THIS CANNOT BE USED IN TANDEM WTIH SampleMecanumDrive();
         //as such this is for Tele-op ONLY! I still have to figure out
         // a way to integrate Roadrunner with tele op
+        //(Note, this might actually be wrong. You could totally overlap the two I think)
+        //The issue is if Roadrunner is setting powers as well as the Chassis() class
     }
 
     public void assignWheelPower(double powers[]) {
@@ -45,7 +47,7 @@ public class Chassis {
     public double getHeading() {
         return Math.toDegrees(imu.getAngularOrientation().firstAngle);
     }
-    //gets the heading from the imu (not tested with new update yet)
+    //gets the heading from the imu
 
     public double[] mecanumPowers(double xInput, double yInput, double rotation) {
         if(Math.abs(xInput) <= 0.05) xInput = 0;
